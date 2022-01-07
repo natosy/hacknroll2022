@@ -7,8 +7,8 @@ let duckRadius = 30;
 let directionX = 1;
 let directionY = 1;
 const invisible_radius = 100; // If cursor dist is less than this distance, increase the speed
-let step = 50;
-const t = 0.1;  // Lerp t constant
+let step = 75;
+const t = 0.12;  // Lerp t constant
 let difficulty = 2; //0=easy, 1=hard, 2=insane
 let farmer_direction;
 let canvas;
@@ -31,13 +31,27 @@ var insults = ["hehe", "haha", "noob", "loser"];
 var insult;
 var insult_text = document.getElementById("text-noob")
 function init(){
-    //init1();
+    canvas = document.getElementById('canvas');
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+    ctx = canvas.getContext('2d');
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 }
-function init1() {
+function start(){
+    var audio = new Audio('./annoying.mp3');
+    audio.play();
+    start = document.getElementById("button");
+    start.hidden = true;
+    document.getElementById("duck").style.position='absolute';
+    
+    document.getElementById("ducku").style.animationName = 'title-ani';
+
     var app = document.getElementById('app');
 
     var typewriter = new Typewriter(app, {
-      loop: false,
+      loop: true,
       delay: 75,
     });
     
@@ -85,7 +99,6 @@ function changeDifficulty() {
     }
 }
 
-
 function getCursorXY(e) {
     take_step();
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
@@ -98,7 +111,7 @@ function click(e) {
     }
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
     mouseY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-    var margin = 50;
+    var margin = 100;
     var dx = mouseX - duckX
     var dy = mouseY - duckY
     var dist = Math.sqrt(dx ** 2 + dy ** 2)
@@ -153,8 +166,6 @@ function take_step() {
 function showWinText() {
     ctx.fillStyle = "#1B3022";
     ctx.textAlign = "center";
-    console.log(ctx);
-    console.log("in show win text");
     ctx.font = "80px 'HumanoidStraight'";
     ctx.fillText("Congratulations!", canvas.width / 2, canvas.height / 2)
     ctx.fillText("You have captured the duck.", canvas.width / 2, canvas.height / 2 + 75);
@@ -163,35 +174,14 @@ function showWinText() {
     return;
 }
 
-
-
-function showLevel(width) {
-    ctx.fillStyle = "#1B3022";
-    ctx.textAlign = "center";
-
-    ctx.font = "80px 'HumanoidStraight'";
-    ctx.fillText("<", width / 2 - 150, 75);
-    if (difficulty == 0) {
-        ctx.font = "60px 'HumanoidStraight'";
-        ctx.fillText("easy", width / 2, 60);
-    } else if (difficulty == 1) {
-        ctx.font = "60px 'HumanoidStraight'";
-        ctx.fillText("hard", width / 2, 60);
-    } else {
-        ctx.font = "60px 'HumanoidStraight'";
-        ctx.fillText("insane", width / 2, 60);
-    }
-    ctx.font = "80px 'HumanoidStraight'";
-    ctx.fillText(">", width / 2 + 150, 75);
-
-}
-
-
-
 function win_animation() {
     
     var duck_wink = document.getElementById("duck-wink");
     var duck = document.getElementById("duck");
+    var ducku = document.getElementById("ducku");
+    var app = document.getElementById("app");
+    app.style.opacity = 0;
+    ducku.style.opacity = 1-opacity;
     duck_wink.style.left = duck.style.left;
     duck_wink.style.top = duck.style.top;
     duck.hidden = true;
@@ -229,9 +219,6 @@ function draw() {
     ctx.globalCompositeOperation = 'destination-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    
-    
-
     var duck = document.getElementById("duck");
     duck.style.left = duckX;
     duck.style.top = duckY;
@@ -242,7 +229,6 @@ function draw() {
     if (Math.random() <= chanceToInsult && insult_text.hidden === true) {
         insult = "text-" + insults[Math.floor(Math.random() * insults.length)];
         insult_text = document.getElementById(insult);
-        console.log(insult)
         insult_text.style.left = duckX + marginX;
         insult_text.style.top = duckY - marginY;
         insult_text.hidden = false;
@@ -253,13 +239,6 @@ function draw() {
     }
     
     duck.style.transform = "scaleX(" + directionX + ")";
-    
-    showLevel(canvas.width);
-    
-
-  
-
-
 
     if (win) {
         window.cancelAnimationFrame(animationID);
@@ -269,17 +248,7 @@ function draw() {
         return;
     }
 
-//     var app = document.getElementById('app');
 
-//     var typewriter = new Typewriter(app, {
-//     loop: false,
-//     delay: 75,
-//     });
-
-//     typewriter
-//   .pauseFor(2500)
-//   .typeString('A simple yet powerful native javascript')
-//   .start();
 
     var deltaX = duckX - mouseX;
     var deltaY = mouseY - duckY;
@@ -293,10 +262,16 @@ function draw() {
     } else {
         farmer_direction = "left";
     }
-    console.log(farmer_direction);
-    document.documentElement.style.setProperty('--frame_0', "url('./farmer_" + farmer_direction + "/frame_0_delay-0.1s.png')");
-    document.documentElement.style.setProperty('--frame_1', "url('./farmer_" + farmer_direction + "/frame_1_delay-0.1s.png')");
-    document.documentElement.style.setProperty('--frame_2', "url('./farmer_" + farmer_direction + "/frame_2_delay-0.1s.png')");
-    document.documentElement.style.setProperty('--frame_3', "url('./farmer_" + farmer_direction + "/frame_3_delay-0.1s.png')");
+
+    let classes = document.styleSheets[1].cssRules;
+    for (var x = 0; x < classes.length; x++) {        
+        if (classes[x].name == 'cursor') {
+            classes[x].deleteRule([0, 33, 66, 100]);
+            classes[x].appendRule('0% {cursor: url("./farmer_'+farmer_direction+'/frame_0.png"), auto;}');
+            classes[x].appendRule('33% {cursor: url("./farmer_'+farmer_direction+'/frame_1.png"), auto;}');
+            classes[x].appendRule('66% {cursor: url("./farmer_'+farmer_direction+'/frame_2.png"), auto;}');
+            classes[x].appendRule('100% {cursor: url("./farmer_'+farmer_direction+'/frame_3.png"), auto;}');
+        }         
+    }
     animationID = window.requestAnimationFrame(draw);
 }

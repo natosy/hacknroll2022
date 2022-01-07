@@ -1,17 +1,7 @@
-<div id="sname">
-    <button onclick = "(function(){var audio = new Audio('./annoying.mp3');
-    audio.play();return false;})(); return false;">test</button>
-</div>
 <div id="outer"><div id="app"></div></div>
 <canvas width="10" height="10" id="canvas"></canvas>
 
 <style>
-    :root {
-        --frame_0: url("./farmer_left/frame_0_delay-0.1s.png");
-        --frame_1: url("./farmer_left/frame_1_delay-0.1s.png");
-        --frame_2: url("./farmer_left/frame_2_delay-0.1s.png");
-        --frame_3: url("./farmer_left/frame_3_delay-0.1s.png");
-      }
     canvas {
         position: absolute;
         background-color: #77DD99;
@@ -30,18 +20,18 @@
     }
       
     @-webkit-keyframes cursor {
+        0% {cursor: url("./farmer_left/frame_0.png"), auto;}
+        33% {cursor: url("./farmer_left/frame_1.png"), auto;}
+        66% {cursor: url("./farmer_left/frame_2.png"), auto;}
+        100% {cursor: url("./farmer_left/frame_3.png"), auto;}
+    } 
+/*       
+    {% comment %} @keyframes cursor {
         0% {cursor: var(--frame_0), auto;}
         33% {cursor: var(--frame_1), auto;}
         66% {cursor: var(--frame_2), auto;}
         100% {cursor: var(--frame_3), auto;}
-    } 
-      
-    @keyframes cursor {
-        0% {cursor: var(--frame_0), auto;}
-        33% {cursor: var(--frame_1), auto;}
-        66% {cursor: var(--frame_2), auto;}
-        100% {cursor: var(--frame_3), auto;}
-    } 
+    }  {% endcomment %} */
 
     @font-face {
         font-family: 'HumanoidStraight'; 
@@ -58,10 +48,10 @@
         font-weight: 400;
         font-family: 'PKMN', sans-serif;
         position:absolute;
-        z-index:1;
+        z-index:101;
         color: black;
         -webkit-text-stroke: 2px black; 
-        top: 100px;
+        top: 50px;
     }
       #outer {
         width:100%;
@@ -70,11 +60,14 @@
       }
 
     #sname {
+        width:100%;
+        height:100%;
+        display: flex;
+        align-items:center;
+        justify-content: center;
         font-family:PKMN;
         position:absolute;
         z-index:1;
-        margin-top: 100px;
-        margin-bottom: 100px;
         color: rgba(1,1,1,0.7);
     }
     
@@ -107,21 +100,63 @@
         outline: none;
     }
 
+    #container{
+        width:100%;
+        height:100%;
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        position:absolute;
+        top: 70px;
+    }
+
+    #title-container{
+        width:100%;
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        position:absolute;
+    }
+
+
+    @keyframes title-ani {
+        0% {margin-top:125px;}
+        100% {margin-top:40vh;}
+    }
+
+    #ducku{
+        margin-top:125px;
+        width: 800px;
+        animation-duration: 2s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+
 </style>
 
 <div class "container" id="container">
     <div class "picture">
-        <img alt="duck", id="duck", style="width: 50px; position: absolute;", src="duck_walk.gif">
+        <img alt="duck", id="duck", style="width: 50px;z-index:100;", src="duck_walk.gif">
     </div>
 </div>
 
-<img id="duck-wink", style="width: 50px; position: absolute;", src="duck_wink.gif" hidden>
+<img id="duck-wink", style="width: 50px; position: absolute;z-index:100;", src="duck_wink.gif" hidden>
 <img id="duck-u-text", style="width: 300px; position: absolute;", src="text-duck-u.png" hidden>
-<img id="nice-try-text", style="width: 300px; position: absolute;", src="text-nice-try.png" hidden>
 <img id="text-noob", style="width: 100px; position: absolute;", src="text-noob.png" hidden>
 <img id="text-hehe", style="width: 100px; position: absolute;", src="text-hehe.png" hidden>
 <img id="text-haha", style="width: 100px; position: absolute;", src="text-haha.png" hidden>
 <img id="text-loser", style="width: 100px; position: absolute;", src="text-loser.png" hidden>
 
 <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+
 <script src = "script.js"></script>
+
+<div id="title-container">
+    <img id = "ducku" src="title.png">
+</div>
+
+<div id="sname">
+    <button id="button" onclick = "start()" >START GAME</button>
+</div>
+
