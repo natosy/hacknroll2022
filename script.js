@@ -19,10 +19,45 @@ let animationID;
 let winID;
 let opacity = 0;
 let duckW = 30;
+var text;
+var fps = 20000;
+var i=1;
+var char;
+var welcomeID;
 
-function init() {
-    var audio = new Audio('./annoying.mp3');
-    audio.play();
+
+// Insults
+var insults = ["hehe", "haha", "noob", "loser"];
+var insult;
+var insult_text = document.getElementById("text-noob")
+function init(){
+    //init1();
+}
+function init1() {
+    var app = document.getElementById('app');
+
+    var typewriter = new Typewriter(app, {
+      loop: false,
+      delay: 75,
+    });
+    
+    typewriter
+      .typeString('Oh no - your duck has escaped!')
+      .pauseFor(2000)
+      .deleteAll()
+      .typeString('Track it down with your mouse and click on it to catch it.')
+      .pauseFor(5000)
+      .deleteAll()
+      .pauseFor(4000)
+      .typeString("It can't be that hard, right?")
+      .pauseFor(2000)
+      .deleteAll()
+      .pauseFor(3000)
+      .typeString("Good luck!")
+      .pauseFor(2000)
+      .deleteAll()
+      .start();
+    
     if (window.Event) {
         document.captureEvents(Event.MOUSEMOVE);
     }
@@ -63,7 +98,7 @@ function click(e) {
     }
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
     mouseY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-    var margin = 1000;
+    var margin = 50;
     var dx = mouseX - duckX
     var dy = mouseY - duckY
     var dist = Math.sqrt(dx ** 2 + dy ** 2)
@@ -128,6 +163,8 @@ function showWinText() {
     return;
 }
 
+
+
 function showLevel(width) {
     ctx.fillStyle = "#1B3022";
     ctx.textAlign = "center";
@@ -144,12 +181,9 @@ function showLevel(width) {
         ctx.font = "60px 'HumanoidStraight'";
         ctx.fillText("insane", width / 2, 60);
     }
-
     ctx.font = "80px 'HumanoidStraight'";
-    ctx.fillText(">\n", width / 2 + 150, 75);
-    ctx.font = "30px 'HumanoidStraight'"
-    ctx.fillText("Your mischievous duck has escaped your farm!", width / 2, canvas.height / 5);
-    ctx.fillText("Left click the duck to bring him back home.", width / 2, canvas.height / 5 + 25);
+    ctx.fillText(">", width / 2 + 150, 75);
+
 }
 
 
@@ -158,6 +192,8 @@ function win_animation() {
     
     var duck_wink = document.getElementById("duck-wink");
     var duck = document.getElementById("duck");
+    duck_wink.style.left = duck.style.left;
+    duck_wink.style.top = duck.style.top;
     duck.hidden = true;
     duck_wink.hidden = false;
 
@@ -166,18 +202,18 @@ function win_animation() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     opacity += 0.01;
     // Smoothly center and expand duck
-    duck.style.left = canvas.width / 2 - duckW / 2;
-    duck.style.top = canvas.height / 2 - duckW / 2;
+    duck_wink.style.left = canvas.width / 2 - duckW / 2;
+    duck_wink.style.top = canvas.height / 2 - duckW / 2;
     if(!(duckW >= canvas.width/4)){
         duckW = 30 + opacity * 150;
-        duck.style.width = duckW+'px';
+        duck_wink.style.width = duckW+'px';
     } else{
         text = document.getElementById("duck-u-text");
         text.style.left = canvas.width / 2 - duckW / 2 + 210;
         text.style.top = canvas.height / 2 - duckW / 2 - 120;
         text.hidden = false;
     }
-    console.log(duckW);
+
     if(opacity >= 1){
         
         window.cancelAnimationFrame(winID);
@@ -193,12 +229,37 @@ function draw() {
     ctx.globalCompositeOperation = 'destination-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    showLevel(canvas.width);
+    
+    
 
     var duck = document.getElementById("duck");
     duck.style.left = duckX;
     duck.style.top = duckY;
+    // Insult
+    var chanceToInsult = 0.005
+    var marginX = 25;
+    var marginY = 75;
+    if (Math.random() <= chanceToInsult && insult_text.hidden === true) {
+        insult = "text-" + insults[Math.floor(Math.random() * insults.length)];
+        insult_text = document.getElementById(insult);
+        console.log(insult)
+        insult_text.style.left = duckX + marginX;
+        insult_text.style.top = duckY - marginY;
+        insult_text.hidden = false;
+        setTimeout(() => insult_text.hidden = true, 1000);
+    } else {
+        insult_text.style.left = duckX + marginX;
+        insult_text.style.top = duckY - marginY;
+    }
+    
     duck.style.transform = "scaleX(" + directionX + ")";
+    
+    showLevel(canvas.width);
+    
+
+  
+
+
 
     if (win) {
         window.cancelAnimationFrame(animationID);
@@ -207,6 +268,18 @@ function draw() {
         setTimeout(() => window.location.reload(), delay);
         return;
     }
+
+//     var app = document.getElementById('app');
+
+//     var typewriter = new Typewriter(app, {
+//     loop: false,
+//     delay: 75,
+//     });
+
+//     typewriter
+//   .pauseFor(2500)
+//   .typeString('A simple yet powerful native javascript')
+//   .start();
 
     var deltaX = duckX - mouseX;
     var deltaY = mouseY - duckY;
@@ -220,6 +293,7 @@ function draw() {
     } else {
         farmer_direction = "left";
     }
+    console.log(farmer_direction);
     document.documentElement.style.setProperty('--frame_0', "url('./farmer_" + farmer_direction + "/frame_0_delay-0.1s.png')");
     document.documentElement.style.setProperty('--frame_1', "url('./farmer_" + farmer_direction + "/frame_1_delay-0.1s.png')");
     document.documentElement.style.setProperty('--frame_2', "url('./farmer_" + farmer_direction + "/frame_2_delay-0.1s.png')");

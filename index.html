@@ -1,3 +1,8 @@
+<div id="sname">
+    <button onclick = "(function(){var audio = new Audio('./annoying.mp3');
+    audio.play();return false;})(); return false;">test</button>
+</div>
+<div id="outer"><div id="app"></div></div>
 <canvas width="10" height="10" id="canvas"></canvas>
 
 <style>
@@ -42,10 +47,66 @@
         font-family: 'HumanoidStraight'; 
         src: url('humanoidstraight-webfont.woff') format('woff'); 
     }
-    h1 {
-         font-family: HumanoidStraight; 
+    @font-face {
+        font-family: 'PKMN'; 
+        src: url('PKMN.woff') format('woff'); 
     }
     
+
+    #app {
+        font-size: 35px;
+        font-weight: 400;
+        font-family: 'PKMN', sans-serif;
+        position:absolute;
+        z-index:1;
+        color: black;
+        -webkit-text-stroke: 2px black; 
+        top: 100px;
+    }
+      #outer {
+        width:100%;
+        display: flex;
+        justify-content: center;
+      }
+
+    #sname {
+        font-family:PKMN;
+        position:absolute;
+        z-index:1;
+        margin-top: 100px;
+        margin-bottom: 100px;
+        color: rgba(1,1,1,0.7);
+    }
+    
+    #sname button {
+        position:absolute;
+        z-index:1;
+        font-family: PKMN;
+        font-weight: bold;
+        font-size: 4em;
+        transition: all 500ms;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+    }
+        
+    #sname button:hover {
+        font-family:PKMN;
+        position:absolute;
+        z-index:1;
+        font-size:88px;
+        font-size-adjust: 20px;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+    }
+
 </style>
 
 <div class "container" id="container">
@@ -56,5 +117,11 @@
 
 <img id="duck-wink", style="width: 50px; position: absolute;", src="duck_wink.gif" hidden>
 <img id="duck-u-text", style="width: 300px; position: absolute;", src="text-duck-u.png" hidden>
+<img id="nice-try-text", style="width: 300px; position: absolute;", src="text-nice-try.png" hidden>
+<img id="text-noob", style="width: 100px; position: absolute;", src="text-noob.png" hidden>
+<img id="text-hehe", style="width: 100px; position: absolute;", src="text-hehe.png" hidden>
+<img id="text-haha", style="width: 100px; position: absolute;", src="text-haha.png" hidden>
+<img id="text-loser", style="width: 100px; position: absolute;", src="text-loser.png" hidden>
 
+<script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 <script src = "script.js"></script>
