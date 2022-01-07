@@ -6,9 +6,9 @@ let duckY = 500;
 let duckRadius = 30;
 let directionX = 1;
 let directionY = 1;
-const invisible_radius = 100; // If cursor dist is less than this distance, increase the speed
+const invisible_radius = 250; // If cursor dist is less than this distance, increase the speed
 let step = 75;
-const t = 0.12;  // Lerp t constant
+const t = 0.1;  // Lerp t constant
 let difficulty = 2; //0=easy, 1=hard, 2=insane
 let farmer_direction;
 let canvas;
@@ -81,13 +81,7 @@ function start(){
 }
 
 function setDefaultStep() {
-    if (difficulty == 0) {
-        step = 50
-    } else if (difficulty == 1) {
-        step = 100
-    } else {
-        step = 200
-    }
+    step = 75;
 }
 
 function changeDifficulty() {
@@ -111,7 +105,7 @@ function click(e) {
     }
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
     mouseY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-    var margin = 100;
+    var margin = 50;
     var dx = mouseX - duckX
     var dy = mouseY - duckY
     var dist = Math.sqrt(dx ** 2 + dy ** 2)
@@ -224,9 +218,11 @@ function draw() {
     duck.style.top = duckY;
     // Insult
     var chanceToInsult = 0.005
-    var marginX = 25;
-    var marginY = 75;
+    var marginX = 20;
+    var marginY = 20;
     if (Math.random() <= chanceToInsult && insult_text.hidden === true) {
+        var audio = new Audio('./quack.mp3');
+        audio.play();
         insult = "text-" + insults[Math.floor(Math.random() * insults.length)];
         insult_text = document.getElementById(insult);
         insult_text.style.left = duckX + marginX;
