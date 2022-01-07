@@ -7,7 +7,7 @@
         --frame_2: url("./farmer_left/frame_2_delay-0.1s.png");
         --frame_3: url("./farmer_left/frame_3_delay-0.1s.png");
       }
-    #canvas {
+    canvas {
         position: absolute;
         background-color: #77DD99;
         background-image: url("grass_dark.gif");
@@ -17,6 +17,7 @@
     html, body {
         margin: 0 !important;
         padding: 0 !important;
+        overflow: hidden
     }
     * {
         -webkit-animation: cursor 400ms infinite;
@@ -48,8 +49,11 @@
 
 <div class "container" id="container">
     <div class "picture">
-        <img alt="duck", id="duck", style="width: 60px; position: absolute;"", src="duck_walk.gif">
+        <img alt="duck", id="duck", style="width: 50px; position: absolute;", src="duck_walk.gif">
     </div>
 </div>
+
+<img id="duck-wink", style="width: 50px; position: absolute;", src="duck_wink.gif" hidden>
+<img id="duck-u-text", style="width: 300px; position: absolute;", src="text-duck-u.png" hidden>
 
 <script src = "script.js"></script>
