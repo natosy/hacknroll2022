@@ -20,7 +20,8 @@ let winID;
 let opacity = 0;
 let duckW = 30;
 var welcomeID;
-var startID
+var startID;
+var startTime;
 
 // Insults
 var insults = ["hehe", "haha", "noob", "loser"];
@@ -67,6 +68,7 @@ function start_animation(){
     startID = window.requestAnimationFrame(start_animation);
 }
 function start(){
+    startTime = Date.now();
     window.cancelAnimationFrame(startID);
     var audio = new Audio('./annoying.mp3');
     audio.play();
@@ -125,7 +127,7 @@ function getCursorXY(e) {
 
 function click(e) {
     
-    if (win) {
+    if (win || Date.now() - startTime < 15000) {
         return
     }
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
