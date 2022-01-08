@@ -8,7 +8,7 @@ let directionX = 1;
 let directionY = 1;
 const invisible_radius = 250; // If cursor dist is less than this distance, increase the speed
 let step = 75;
-const t = 0.1;  // Lerp t constant
+const t = 0.12;  // Lerp t constant
 let difficulty = 2; //0=easy, 1=hard, 2=insane
 let farmer_direction;
 let canvas;
@@ -19,12 +19,8 @@ let animationID;
 let winID;
 let opacity = 0;
 let duckW = 30;
-var text;
-var fps = 20000;
-var i=1;
-var char;
 var welcomeID;
-
+var startID
 
 // Insults
 var insults = ["hehe", "haha", "noob", "loser"];
@@ -37,9 +33,41 @@ function init(){
     ctx = canvas.getContext('2d');
     ctx.globalCompositeOperation = 'destination-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.onmousemove = getCursorXY;
+    startID = window.requestAnimationFrame(start_animation);
+}
+function start_animation(){
+    var duck = document.getElementById("duck");
+    duckX = duck.getBoundingClientRect().left;
+    duckY = duck.getBoundingClientRect().top;
+    var deltaX = duckX - mouseX;
+    var deltaY = mouseY - duckY;
+    console.log(deltaX, deltaY);
+    var angle = Math.atan2(deltaY, deltaX);
+    if (angle >= Math.PI / 4 && angle < 3 * Math.PI / 4) {
+        farmer_direction = "up";
+    } else if (angle >= -Math.PI / 4 && angle < Math.PI / 4) {
+        farmer_direction = "right";
+    } else if (angle >= -3 * Math.PI / 4 && angle < -Math.PI / 4) {
+        farmer_direction = "down";
+    } else {
+        farmer_direction = "left";
+    }
 
+    let classes = document.styleSheets[0].cssRules;
+    for (var x = 0; x < classes.length; x++) {        
+        if (classes[x].name == 'cursor') {
+            classes[x].deleteRule([0, 33, 66, 100]);
+            classes[x].appendRule('0% {cursor: url("./farmer_'+farmer_direction+'/frame_0.png") 35 35, auto;}');
+            classes[x].appendRule('33% {cursor: url("./farmer_'+farmer_direction+'/frame_1.png") 35 35, auto;}');
+            classes[x].appendRule('66% {cursor: url("./farmer_'+farmer_direction+'/frame_2.png") 35 35, auto;}');
+            classes[x].appendRule('100% {cursor: url("./farmer_'+farmer_direction+'/frame_3.png") 35 35, auto;}');
+        }         
+    }
+    startID = window.requestAnimationFrame(start_animation);
 }
 function start(){
+    window.cancelAnimationFrame(startID);
     var audio = new Audio('./annoying.mp3');
     audio.play();
     start = document.getElementById("button");
@@ -59,7 +87,7 @@ function start(){
       .typeString('Oh no - your duck has escaped!')
       .pauseFor(2000)
       .deleteAll()
-      .typeString('Track it down with your mouse and click on it to catch it.')
+      .typeString('Track it down with your mouse and click it to catch it.')
       .pauseFor(5000)
       .deleteAll()
       .pauseFor(4000)
@@ -72,10 +100,6 @@ function start(){
       .deleteAll()
       .start();
     
-    if (window.Event) {
-        document.captureEvents(Event.MOUSEMOVE);
-    }
-    document.onmousemove = getCursorXY;
     document.onmousedown = click;
     animationID = window.requestAnimationFrame(draw);
 }
@@ -100,15 +124,17 @@ function getCursorXY(e) {
 }
 
 function click(e) {
+    
     if (win) {
         return
     }
     mouseX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
     mouseY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-    var margin = 50;
-    var dx = mouseX - duckX
-    var dy = mouseY - duckY
-    var dist = Math.sqrt(dx ** 2 + dy ** 2)
+    var margin = 75;
+    var dx = mouseX - duckX - 25;
+    var dy = mouseY - duckY - 25;
+    var dist = Math.sqrt(dx ** 2 + dy ** 2);
+    console.log(dist);
     if (dist < margin) {
         win = true;
     }
@@ -134,14 +160,14 @@ function take_step() {
     var dist = dx + dy;
     if (dist < invisible_radius) {
         // Get faster as cursor is closer
-        step += (invisible_radius - dist);
+        step += (invisible_radius - dist) * 2;
     } else {
         // Reset speed to normal
         setDefaultStep()
     }
     var nextX, nextY;
     // dx
-    directionX = directionX * get_sign(0.95); //probability of moving in the same direction
+    directionX = directionX * get_sign(0.9); //probability of moving in the same direction
     nextX = (duckX + step * directionX);
     // dy
     var moves_up = get_sign(0.2); //moves 
@@ -263,10 +289,10 @@ function draw() {
     for (var x = 0; x < classes.length; x++) {        
         if (classes[x].name == 'cursor') {
             classes[x].deleteRule([0, 33, 66, 100]);
-            classes[x].appendRule('0% {cursor: url("./farmer_'+farmer_direction+'/frame_0.png"), auto;}');
-            classes[x].appendRule('33% {cursor: url("./farmer_'+farmer_direction+'/frame_1.png"), auto;}');
-            classes[x].appendRule('66% {cursor: url("./farmer_'+farmer_direction+'/frame_2.png"), auto;}');
-            classes[x].appendRule('100% {cursor: url("./farmer_'+farmer_direction+'/frame_3.png"), auto;}');
+            classes[x].appendRule('0% {cursor: url("./farmer_'+farmer_direction+'/frame_0.png") 35 35, auto;}');
+            classes[x].appendRule('33% {cursor: url("./farmer_'+farmer_direction+'/frame_1.png") 35 35, auto;}');
+            classes[x].appendRule('66% {cursor: url("./farmer_'+farmer_direction+'/frame_2.png") 35 35, auto;}');
+            classes[x].appendRule('100% {cursor: url("./farmer_'+farmer_direction+'/frame_3.png") 35 35, auto;}');
         }         
     }
     animationID = window.requestAnimationFrame(draw);
